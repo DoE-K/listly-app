@@ -1,0 +1,64 @@
+import Link from 'next/link'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+
+type ListCardProps = {
+  list: {
+    id: string
+    title: string
+    description: string | null
+    category: string | null
+    is_ranked: boolean
+    cover_url: string | null
+    profiles?: { username: string; avatar_url: string | null } | { username: string; avatar_url: string | null }[] | null
+  }
+  showAuthor?: boolean
+}
+
+export function ListCard({ list, showAuthor }: ListCardProps) {
+  const author = Array.isArray(list.profiles) ? list.profiles[0] : list.profiles
+
+  return (
+    <Link href={`/lists/${list.id}`}>
+      <Card className="overflow-hidden transition-shadow hover:shadow-md">
+        <div className="aspect-square w-full bg-muted">
+          {list.cover_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={list.cover_url}
+              alt={list.title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+              Kein Cover
+            </div>
+          )}
+        </div>
+        <CardContent className="p-4">
+          <h3 className="truncate font-semibold">{list.title}</h3>
+          {list.description && (
+            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+              {list.description}
+            </p>
+          )}
+        </CardContent>
+        <CardFooter className="flex items-center justify-between p-4 pt-0">
+          <div className="flex gap-1">
+            {list.category && (
+              <Badge variant="secondary">{list.category}</Badge>
+            )}
+            <Badge variant="outline">
+              {list.is_ranked ? 'Ranked' : 'Unranked'}
+            </Badge>
+          </div>
+          {showAuthor && author && (
+            <span className="text-xs text-muted-foreground">
+              @{author.username}
+            </span>
+          )}
+        </CardFooter>
+      </Card>
+    </Link>
+  )
+}
