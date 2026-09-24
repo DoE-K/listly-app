@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -48,6 +48,10 @@ export function ItemEditor({ listId, userId, initialItems }: ItemEditorProps) {
       : [{ id: crypto.randomUUID(), title: '', note: '', image_url: '' }]
   )
 
+  // listId wird an die Server Action gebunden, bevor useActionState sie verwendet
+  const saveListItemsWithId = saveListItems.bind(null, listId)
+  const [state, formAction, pending] = useActionState(saveListItemsWithId, null)
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
@@ -82,19 +86,23 @@ export function ItemEditor({ listId, userId, initialItems }: ItemEditorProps) {
     })
   }
 
-  async function handleSubmit(formData: FormData) {
-    // id ist nur UI-intern, wird für die DB nicht gebraucht
-    const itemsForSave = items.map(({ title, note, image_url }) => ({
-      title,
-      note,
-      image_url,
-    }))
-    formData.set('items', JSON.stringify(itemsForSave))
-    await saveListItems(listId, formData)
-  }
-
   return (
-    <form action={handleSubmit} className="flex flex-col gap-4">
+    <form action={formAction} className="flex flex-col gap-4">
+      {state?.error && (
+        <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+          {state.error}
+        </p>
+      )}
+
+      {/* Items als verstecktes Feld, analog zum cover_url-Pattern */}
+      <input
+        type="hidden"
+        name="items"
+        value={JSON.stringify(
+          items.map(({ title, note, image_url }) => ({ title, note, image_url }))
+        )}
+      />
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -131,8 +139,8 @@ export function ItemEditor({ listId, userId, initialItems }: ItemEditorProps) {
         Item hinzufügen
       </Button>
 
-      <Button type="submit" className="mt-4">
-        Liste speichern
+      <Button type="submit" className="mt-4" disabled={pending}>
+        {pending ? 'Wird gespeichert...' : 'Liste speichern'}
       </Button>
     </form>
   )

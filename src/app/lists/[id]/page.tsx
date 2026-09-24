@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { DeleteListButton } from '@/components/delete-list-button'
 
 export default async function ListDetailPage({
   params,
@@ -18,6 +19,7 @@ export default async function ListDetailPage({
   }
 
   const { list, items } = result
+  const author = Array.isArray(list.profiles) ? list.profiles[0] : list.profiles
 
   const supabase = await createClient()
   const {
@@ -58,18 +60,27 @@ export default async function ListDetailPage({
             <h1 className="text-3xl font-bold tracking-tight">
               {list.title}
             </h1>
+            {author && (
+              <Link
+                href={`/profile/${author.username}`}
+                className="mt-1 inline-block text-sm text-muted-foreground hover:underline"
+              >
+                von @{author.username}
+              </Link>
+            )}
             {list.description && (
-              <p className="mt-2 text-muted-foreground">
+              <p className="mt-3 text-muted-foreground">
                 {list.description}
               </p>
             )}
           </div>
 
           {isOwner && (
-            <div className="mt-4">
+            <div className="mt-4 flex gap-2">
               <Button asChild variant="outline">
                 <Link href={`/lists/${list.id}/edit`}>Liste bearbeiten</Link>
               </Button>
+              <DeleteListButton listId={list.id} listTitle={list.title} />
             </div>
           )}
         </div>

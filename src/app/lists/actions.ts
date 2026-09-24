@@ -3,8 +3,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { listSchema } from '@/lib/validations'
+import type { ActionState } from '@/lib/action-state'
 
-export async function createList(formData: FormData) {
+export async function createList(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const supabase = await createClient()
 
   const {
@@ -15,9 +20,17 @@ export async function createList(formData: FormData) {
     redirect('/login')
   }
 
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const category = formData.get('category') as string
+  const raw = {
+    title: formData.get('title') as string,
+    description: (formData.get('description') as string) || undefined,
+    category: (formData.get('category') as string) || undefined,
+  }
+
+  const parsed = listSchema.safeParse(raw)
+  if (!parsed.success) {
+    return { fieldErrors: parsed.error.flatten().fieldErrors }
+  }
+
   const isRanked = formData.get('is_ranked') === 'on'
   const coverUrl = formData.get('cover_url') as string
 
@@ -25,9 +38,9 @@ export async function createList(formData: FormData) {
     .from('lists')
     .insert({
       user_id: user.id,
-      title,
-      description: description || null,
-      category: category || null,
+      title: parsed.data.title,
+      description: parsed.data.description || null,
+      category: parsed.data.category || null,
       is_ranked: isRanked,
       cover_url: coverUrl || null,
     })
@@ -35,15 +48,18 @@ export async function createList(formData: FormData) {
     .single()
 
   if (error) {
-    console.error('Fehler beim Erstellen der Liste:', error.message)
     return { error: error.message }
   }
 
-  revalidatePath('/dashboard')
+  revalidatePath('/feed')
   redirect(`/lists/${data.id}/edit`)
 }
 
-export async function saveListItems(listId: string, formData: FormData) {
+export async function saveListItems(
+  listId: string,
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const supabase = await createClient()
 
   const {
@@ -61,7 +77,12 @@ export async function saveListItems(listId: string, formData: FormData) {
     image_url: string
   }[]
 
-  // Alte Items löschen
+  const validTitledItems = items.filter((item) => item.title.trim() !== '')
+
+  if (validTitledItems.length === 0) {
+    return { error: 'Die Liste braucht mindestens ein Item mit Titel.' }
+  }
+
   const { error: deleteError } = await supabase
     .from('list_items')
     .delete()
@@ -71,28 +92,60 @@ export async function saveListItems(listId: string, formData: FormData) {
     return { error: deleteError.message }
   }
 
-  // Neue Items einfügen (nur nicht-leere Titel)
-  const validItems = items
-    .filter((item) => item.title.trim() !== '')
-    .map((item, index) => ({
-      list_id: listId,
-      title: item.title,
-      note: item.note || null,
-      image_url: item.image_url || null,
-      position: index,
-    }))
+  const validItems = validTitledItems.map((item, index) => ({
+    list_id: listId,
+    title: item.title,
+    note: item.note || null,
+    image_url: item.image_url || null,
+    position: index,
+  }))
 
-  if (validItems.length > 0) {
-    const { error: insertError } = await supabase
-      .from('list_items')
-      .insert(validItems)
+  const { error: insertError } = await supabase
+    .from('list_items')
+    .insert(validItems)
 
-    if (insertError) {
-      return { error: insertError.message }
-    }
+  if (insertError) {
+    return { error: insertError.message }
   }
 
   revalidatePath(`/lists/${listId}`)
   revalidatePath(`/lists/${listId}/edit`)
   redirect(`/lists/${listId}`)
+}
+
+export async function deleteList(listId: string) {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { data: list } = await supabase
+    .from('lists')
+    .select('user_id')
+    .eq('id', listId)
+    .single()
+
+  if (!list || list.user_id !== user.id) {
+    return { error: 'Du bist nicht berechtigt, diese Liste zu löschen.' }
+  }
+
+  const { error } = await supabase.from('lists').delete().eq('id', listId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single()
+
+  revalidatePath('/feed')
+  redirect(profile ? `/profile/${profile.username}` : '/feed')
 }

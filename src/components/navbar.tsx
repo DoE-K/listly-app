@@ -23,19 +23,19 @@ export async function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-2 font-semibold">
-          <ListChecks className="h-5 w-5" />
-          <span>Listly</span>
+        <Link href={user ? '/feed' : '/'} className="flex items-center gap-2 font-semibold">
+        <ListChecks className="h-5 w-5" />
+        <span>Listly</span>
         </Link>
 
         <nav className="flex items-center gap-4">
           {user ? (
             <>
               <Link
-                href="/dashboard"
+                href="/feed"
                 className="hidden text-sm font-medium text-muted-foreground hover:text-foreground sm:inline"
               >
-                Dashboard
+                Feed
               </Link>
               <Link
                 href="/lists/new"
@@ -44,10 +44,13 @@ export async function Navbar() {
                 Neue Liste
               </Link>
               {username && (
-                <span className="hidden text-sm text-muted-foreground sm:inline">
-                  @{username}
-                </span>
-              )}
+                <Link
+                    href={`/profile/${username}`}
+                    className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline"
+                >
+                    @{username}
+                </Link>
+                )}
               <form action={logout}>
                 <Button variant="outline" size="sm" type="submit">
                   Logout
