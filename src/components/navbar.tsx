@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/app/(auth)/actions'
 import { ListChecks } from 'lucide-react'
+import { Settings } from 'lucide-react'
 
 export async function Navbar() {
   const supabase = await createClient()
@@ -43,6 +44,15 @@ export async function Navbar() {
               >
                 Neue Liste
               </Link>
+
+              <Link
+                href="/settings"
+                className="text-muted-foreground hover:text-foreground"
+                aria-label="Einstellungen"
+                >
+                <Settings className="h-4 w-4" />
+                </Link>
+
               {username && (
                 <Link
                     href={`/profile/${username}`}
