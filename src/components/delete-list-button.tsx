@@ -32,18 +32,20 @@ export function DeleteListButton({
       if (result?.error) {
         setError(result.error)
       }
-      // Bei Erfolg redirected die Server Action selbst zu /dashboard
+      // Bei Erfolg redirected die Server Action selbst
     })
   }
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="sm">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Liste löschen
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger
+        render={
+          <Button variant="destructive" size="sm">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Liste löschen
+          </Button>
+        }
+      />
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Bist du sicher?</AlertDialogTitle>

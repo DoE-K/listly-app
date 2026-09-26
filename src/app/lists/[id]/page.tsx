@@ -77,9 +77,10 @@ export default async function ListDetailPage({
 
           {isOwner && (
             <div className="mt-4 flex gap-2">
-              <Button asChild variant="outline">
-                <Link href={`/lists/${list.id}/edit`}>Liste bearbeiten</Link>
-              </Button>
+              <Button
+                variant="outline"
+                render={<Link href={`/lists/${list.id}/edit`}>Liste bearbeiten</Link>}
+                />
               <DeleteListButton listId={list.id} listTitle={list.title} />
             </div>
           )}

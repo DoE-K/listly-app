@@ -59,12 +59,8 @@ export async function Navbar() {
             </>
           ) : (
             <>
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link href="/signup">Registrieren</Link>
-              </Button>
+              <Button variant="ghost" size="sm" render={<Link href="/login">Login</Link>} />
+                <Button size="sm" render={<Link href="/signup">Registrieren</Link>} />
             </>
           )}
         </nav>
