@@ -21,5 +21,4 @@ export const listSchema = z.object({
     .min(1, 'Titel ist erforderlich')
     .max(100, 'Titel darf maximal 100 Zeichen haben'),
   description: z.string().max(500, 'Beschreibung darf maximal 500 Zeichen haben').optional(),
-  category: z.string().max(50, 'Category darf maximal 50 Zeichen haben').optional(),
 })

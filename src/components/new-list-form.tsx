@@ -29,7 +29,6 @@ export function NewListForm({ userId }: { userId: string }) {
           onChange={setCoverUrl}
           folder="covers"
         />
-        {/* Cover-URL als verstecktes Feld, damit es im FormData landet */}
         <input type="hidden" name="cover_url" value={coverUrl ?? ''} />
       </div>
 
@@ -56,16 +55,6 @@ export function NewListForm({ userId }: { userId: string }) {
         )}
       </div>
 
-      <div className="grid gap-2">
-        <Label htmlFor="category">Category / Tag</Label>
-        <Input id="category" name="category" placeholder="Filme, Musik, Reisen, ..." />
-        {state?.fieldErrors?.category && (
-          <p className="text-sm text-destructive">
-            {state.fieldErrors.category[0]}
-          </p>
-        )}
-      </div>
-
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div>
           <Label htmlFor="is_ranked">Ranked-Liste</Label>
@@ -74,6 +63,16 @@ export function NewListForm({ userId }: { userId: string }) {
           </p>
         </div>
         <Switch id="is_ranked" name="is_ranked" defaultChecked />
+      </div>
+
+      <div className="flex items-center justify-between rounded-lg border p-4">
+        <div>
+          <Label htmlFor="is_public">Öffentlich sichtbar</Label>
+          <p className="text-sm text-muted-foreground">
+            Andere User können diese Liste im Feed sehen
+          </p>
+        </div>
+        <Switch id="is_public" name="is_public" defaultChecked />
       </div>
 
       <Button type="submit" className="w-full" disabled={pending}>

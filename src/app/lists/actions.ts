@@ -23,7 +23,6 @@ export async function createList(
   const raw = {
     title: formData.get('title') as string,
     description: (formData.get('description') as string) || undefined,
-    category: (formData.get('category') as string) || undefined,
   }
 
   const parsed = listSchema.safeParse(raw)
@@ -32,6 +31,7 @@ export async function createList(
   }
 
   const isRanked = formData.get('is_ranked') === 'on'
+  const isPublic = formData.get('is_public') === 'on'
   const coverUrl = formData.get('cover_url') as string
 
   const { data, error } = await supabase
@@ -40,8 +40,8 @@ export async function createList(
       user_id: user.id,
       title: parsed.data.title,
       description: parsed.data.description || null,
-      category: parsed.data.category || null,
       is_ranked: isRanked,
+      is_public: isPublic,
       cover_url: coverUrl || null,
     })
     .select('id')
