@@ -7,10 +7,9 @@ import { Label } from '@/components/ui/label'
 import { Moon, Sun } from 'lucide-react'
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Verhindert Hydration-Mismatch: vor dem Mount kennen wir das echte Theme nicht
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -19,7 +18,7 @@ export function ThemeToggle() {
     return <div className="h-6 w-11 rounded-full bg-muted" />
   }
 
-  const isDark = theme === 'dark'
+  const isDark = resolvedTheme === 'dark'
 
   return (
     <div className="flex items-center justify-between">
