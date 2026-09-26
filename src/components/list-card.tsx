@@ -20,8 +20,8 @@ export function ListCard({ list, showAuthor }: ListCardProps) {
 
   return (
     <Link href={`/lists/${list.id}`}>
-      <Card className="overflow-hidden transition-shadow hover:shadow-md">
-        <div className="aspect-square w-full bg-muted">
+      <Card className="overflow-hidden py-0 transition-shadow hover:shadow-md">
+        <div className="aspect-square w-full overflow-hidden rounded-t-xl bg-muted">
           {list.cover_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -43,8 +43,8 @@ export function ListCard({ list, showAuthor }: ListCardProps) {
             </p>
           )}
         </CardContent>
-        <CardFooter className="flex items-center justify-between p-4 pt-0">
-          <div className="flex gap-1">
+        <CardFooter className="flex items-center justify-between px-4 pb-4">
+          <div className="flex items-center gap-1">
             {list.category && (
               <Badge variant="secondary">{list.category}</Badge>
             )}
@@ -53,7 +53,7 @@ export function ListCard({ list, showAuthor }: ListCardProps) {
             </Badge>
           </div>
           {showAuthor && author && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs leading-none text-muted-foreground">
               @{author.username}
             </span>
           )}
