@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import Link from 'next/link'
 
 export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, null)
@@ -58,12 +57,6 @@ export default function LoginPage() {
               {pending ? 'Wird eingeloggt...' : 'Login'}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Noch keinen Account?{' '}
-            <Link href="/signup" className="underline underline-offset-4">
-              Registrieren
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>

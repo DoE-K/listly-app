@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const PUBLIC_PATHS = ['/login', '/signup']
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -25,8 +27,26 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // WICHTIG: Zwischen createServerClient und getUser() keinen Code ausführen
-  await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const path = request.nextUrl.pathname
+  const isPublicPath = PUBLIC_PATHS.includes(path)
+
+  // Nicht eingeloggt + geschützte Route → zum Login
+  if (!user && !isPublicPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Eingeloggt + Login/Signup aufgerufen → weiterleiten in die App
+  if (user && isPublicPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/feed'
+    return NextResponse.redirect(url)
+  }
 
   return supabaseResponse
 }
