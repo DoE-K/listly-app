@@ -1,0 +1,18 @@
+{
+  "Navbar": {
+    "feed": "Feed",
+    "newList": "Neue Liste",
+    "settings": "Einstellungen",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Registrieren"
+  },
+  "Settings": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "appearanceDescription": "Wähle zwischen hellem und dunklem Design.",
+    "darkMode": "Dark Mode",
+    "language": "Sprache",
+    "languageDescription": "Wähle deine bevorzugte Sprache."
+  }
+}

@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import { logout } from '@/app/(auth)/actions'
 import { ListChecks } from 'lucide-react'
 import { Settings } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 export async function Navbar() {
+  const t = await getTranslations('Navbar')
   const supabase = await createClient()
   const {
     data: { user },
@@ -36,13 +38,13 @@ export async function Navbar() {
                 href="/feed"
                 className="hidden text-sm font-medium text-muted-foreground hover:text-foreground sm:inline"
               >
-                Feed
+                {t('feed')}
               </Link>
               <Link
                 href="/lists/new"
                 className="hidden text-sm font-medium text-muted-foreground hover:text-foreground sm:inline"
               >
-                Neue Liste
+                {t('newList')}
               </Link>
 
               <Link
@@ -63,14 +65,14 @@ export async function Navbar() {
                 )}
               <form action={logout}>
                 <Button variant="outline" size="sm" type="submit">
-                  Logout
+                  {t('logout')}
                 </Button>
               </form>
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" render={<Link href="/login">Login</Link>} />
-                <Button size="sm" render={<Link href="/signup">Registrieren</Link>} />
+              <Button variant="ghost" size="sm" render={<Link href="/login">{t('login')}</Link>} />
+                <Button size="sm" render={<Link href="/signup">{t('signup')}</Link>} />
             </>
           )}
         </nav>
