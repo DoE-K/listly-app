@@ -14,5 +14,20 @@
     "darkMode": "Dark Mode",
     "language": "Sprache",
     "languageDescription": "Wähle deine bevorzugte Sprache."
+  },
+  "Auth": {
+    "loginTitle": "Willkommen zurück",
+    "loginDescription": "Logg dich ein, um deine Listen zu verwalten.",
+    "signupTitle": "Account erstellen",
+    "signupDescription": "Erstell dir einen Account, um eigene Listen anzulegen.",
+    "username": "Username",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "loginButton": "Login",
+    "loginButtonPending": "Wird eingeloggt...",
+    "signupButton": "Registrieren",
+    "signupButtonPending": "Wird erstellt...",
+    "emailAlreadyRegistered": "Diese E-Mail ist bereits registriert.",
+    "invalidCredentials": "E-Mail oder Passwort ist falsch."
   }
 }

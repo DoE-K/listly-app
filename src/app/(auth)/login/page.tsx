@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { useTranslations } from 'next-intl'
 import { login } from '../actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,15 +16,14 @@ import {
 
 export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, null)
+  const t = useTranslations('Auth')
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Willkommen zurück</CardTitle>
-          <CardDescription>
-            Logg dich ein, um deine Listen zu verwalten.
-          </CardDescription>
+          <CardTitle className="text-2xl">{t('loginTitle')}</CardTitle>
+          <CardDescription>{t('loginDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form action={formAction} className="flex flex-col gap-4">
@@ -34,7 +34,7 @@ export default function LoginPage() {
             )}
 
             <div className="grid gap-2">
-              <Label htmlFor="email">E-Mail</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <Input id="email" name="email" type="email" placeholder="du@beispiel.de" />
               {state?.fieldErrors?.email && (
                 <p className="text-sm text-destructive">
@@ -44,7 +44,7 @@ export default function LoginPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="password">Passwort</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <Input id="password" name="password" type="password" />
               {state?.fieldErrors?.password && (
                 <p className="text-sm text-destructive">
@@ -54,7 +54,7 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={pending}>
-              {pending ? 'Wird eingeloggt...' : 'Login'}
+              {pending ? t('loginButtonPending') : t('loginButton')}
             </Button>
           </form>
         </CardContent>

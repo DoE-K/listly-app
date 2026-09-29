@@ -14,5 +14,20 @@
     "darkMode": "Dark Mode",
     "language": "Language",
     "languageDescription": "Choose your preferred language."
+  },
+  "Auth": {
+    "loginTitle": "Welcome back",
+    "loginDescription": "Log in to manage your lists.",
+    "signupTitle": "Create an account",
+    "signupDescription": "Create an account to build your own lists.",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Log in",
+    "loginButtonPending": "Logging in...",
+    "signupButton": "Sign up",
+    "signupButtonPending": "Creating...",
+    "emailAlreadyRegistered": "This email is already registered.",
+    "invalidCredentials": "Email or password is incorrect."
   }
 }

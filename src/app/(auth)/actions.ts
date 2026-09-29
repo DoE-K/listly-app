@@ -5,11 +5,15 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { signupSchema, loginSchema } from '@/lib/validations'
 import type { ActionState } from '@/lib/action-state'
+import { getTranslations } from 'next-intl/server'
+
 
 export async function signup(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const t = await getTranslations('Auth')
+
   const raw = {
     username: formData.get('username') as string,
     email: formData.get('email') as string,
@@ -31,10 +35,8 @@ export async function signup(
   })
 
   if (error) {
-    // Supabase gibt bei doppelter E-Mail eine generische Meldung zurück,
-    // wir übersetzen die häufigsten Fälle für bessere UX
     if (error.message.includes('already registered')) {
-      return { error: 'Diese E-Mail ist bereits registriert.' }
+      return { error: t('emailAlreadyRegistered') }
     }
     return { error: error.message }
   }
@@ -47,6 +49,8 @@ export async function login(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const t = await getTranslations('Auth')
+
   const raw = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -62,7 +66,7 @@ export async function login(
 
   if (error) {
     if (error.message.includes('Invalid login credentials')) {
-      return { error: 'E-Mail oder Passwort ist falsch.' }
+      return { error: t('invalidCredentials') }
     }
     return { error: error.message }
   }
