@@ -17,7 +17,8 @@ export function LanguageSwitcher() {
   const t = useTranslations('Settings')
   const [isPending, startTransition] = useTransition()
 
-  function handleChange(value: string) {
+  function handleChange(value: string | null) {
+    if (!value) return
     startTransition(() => {
       setLocale(value as Locale)
     })
