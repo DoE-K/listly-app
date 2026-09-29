@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { ImageUpload } from '@/components/image-upload'
 import { GripVertical, Trash2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 type SortableItemProps = {
   id: string
@@ -42,6 +43,8 @@ export function SortableItem({
     opacity: isDragging ? 0.5 : 1,
   }
 
+  const t = useTranslations('ItemEditor')
+
   return (
     <Card ref={setNodeRef} style={style}>
       <CardContent className="flex items-start gap-3 p-4">
@@ -67,12 +70,12 @@ export function SortableItem({
 
         <div className="flex flex-1 flex-col gap-2">
           <Input
-            placeholder="Titel"
+            placeholder={t('titlePlaceholder')}
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
           />
           <Input
-            placeholder="Notiz (optional)"
+            placeholder={t('notePlaceholder')}
             value={note}
             onChange={(e) => onNoteChange(e.target.value)}
           />

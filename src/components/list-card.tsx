@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -15,7 +16,8 @@ type ListCardProps = {
   showAuthor?: boolean
 }
 
-export function ListCard({ list, showAuthor }: ListCardProps) {
+export async function ListCard({ list, showAuthor }: ListCardProps) {
+  const t = await getTranslations('ListCard')
   const author = Array.isArray(list.profiles) ? list.profiles[0] : list.profiles
 
   return (
@@ -31,7 +33,7 @@ export function ListCard({ list, showAuthor }: ListCardProps) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-              Kein Cover
+              {t('noCover')}
             </div>
           )}
         </div>
@@ -49,7 +51,7 @@ export function ListCard({ list, showAuthor }: ListCardProps) {
               <Badge variant="secondary">{list.category}</Badge>
             )}
             <Badge variant="outline">
-              {list.is_ranked ? 'Ranked' : 'Unranked'}
+              {list.is_ranked ? t('ranked') : t('unranked')}
             </Badge>
           </div>
           {showAuthor && author && (

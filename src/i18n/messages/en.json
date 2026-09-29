@@ -29,5 +29,57 @@
     "signupButtonPending": "Creating...",
     "emailAlreadyRegistered": "This email is already registered.",
     "invalidCredentials": "Email or password is incorrect."
+  },
+  "Feed": {
+    "title": "Feed",
+    "empty": "No public lists yet."
+  },
+  "ListCard": {
+    "ranked": "Ranked",
+    "unranked": "Unranked",
+    "noCover": "No cover"
+  },
+  "NewList": {
+    "pageTitle": "Create a new list",
+    "cover": "Cover image",
+    "title": "Title",
+    "titlePlaceholder": "My Top 10 Movies",
+    "description": "Description",
+    "descriptionPlaceholder": "What's this list about?",
+    "rankedLabel": "Ranked list",
+    "rankedDescription": "Items are displayed numbered",
+    "publicLabel": "Publicly visible",
+    "publicDescription": "Other users can see this list in the feed",
+    "submit": "Create list & add items",
+    "submitPending": "Creating..."
+  },
+  "ItemEditor": {
+    "titlePlaceholder": "Title",
+    "notePlaceholder": "Note (optional)",
+    "addItem": "Add item",
+    "save": "Save list",
+    "savePending": "Saving...",
+    "minOneItem": "The list needs at least one item with a title."
+  },
+  "ListDetail": {
+    "noCover": "No cover",
+    "by": "by",
+    "edit": "Edit list",
+    "noItems": "This list has no items yet."
+  },
+  "DeleteList": {
+    "trigger": "Delete list",
+    "title": "Are you sure?",
+    "description": "The list \"{listTitle}\" and all its items will be permanently deleted. This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete permanently",
+    "pending": "Deleting..."
+  },
+  "Profile": {
+    "joined": "Joined {date}",
+    "ownLists": "Your lists",
+    "userLists": "Lists by @{username}",
+    "ownEmpty": "You haven't created any list yet.",
+    "otherEmpty": "This user hasn't created any public list yet."
   }
 }

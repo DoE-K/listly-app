@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
@@ -25,6 +26,7 @@ export function DeleteListButton({
 }) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const t = useTranslations('DeleteList')
 
   function handleDelete() {
     startTransition(async () => {
@@ -32,7 +34,6 @@ export function DeleteListButton({
       if (result?.error) {
         setError(result.error)
       }
-      // Bei Erfolg redirected die Server Action selbst
     })
   }
 
@@ -42,17 +43,15 @@ export function DeleteListButton({
         render={
           <Button variant="destructive" size="sm">
             <Trash2 className="mr-2 h-4 w-4" />
-            Liste löschen
+            {t('trigger')}
           </Button>
         }
       />
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bist du sicher?</AlertDialogTitle>
+          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Die Liste <strong>&quot;{listTitle}&quot;</strong> und alle enthaltenen
-            Items werden endgültig gelöscht. Diese Aktion kann nicht rückgängig
-            gemacht werden.
+            {t('description', { listTitle })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error && (
@@ -61,13 +60,13 @@ export function DeleteListButton({
           </p>
         )}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Abbrechen</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isPending ? 'Wird gelöscht...' : 'Endgültig löschen'}
+            {isPending ? t('pending') : t('confirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

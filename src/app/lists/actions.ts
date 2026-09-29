@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { listSchema } from '@/lib/validations'
 import type { ActionState } from '@/lib/action-state'
+import { getTranslations } from 'next-intl/server'
+
 
 export async function createList(
   _prevState: ActionState,
@@ -60,6 +62,7 @@ export async function saveListItems(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const t = await getTranslations('ItemEditor')
   const supabase = await createClient()
 
   const {
@@ -80,7 +83,7 @@ export async function saveListItems(
   const validTitledItems = items.filter((item) => item.title.trim() !== '')
 
   if (validTitledItems.length === 0) {
-    return { error: 'Die Liste braucht mindestens ein Item mit Titel.' }
+    return { error: t('minOneItem') }
   }
 
   const { error: deleteError } = await supabase

@@ -29,5 +29,57 @@
     "signupButtonPending": "Wird erstellt...",
     "emailAlreadyRegistered": "Diese E-Mail ist bereits registriert.",
     "invalidCredentials": "E-Mail oder Passwort ist falsch."
+  },
+  "Feed": {
+    "title": "Feed",
+    "empty": "Noch keine öffentlichen Listen vorhanden."
+  },
+  "ListCard": {
+    "ranked": "Ranked",
+    "unranked": "Unranked",
+    "noCover": "Kein Cover"
+  },
+  "NewList": {
+    "pageTitle": "Neue Liste erstellen",
+    "cover": "Cover-Bild",
+    "title": "Titel",
+    "titlePlaceholder": "Meine Top 10 Filme",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Worum geht's in dieser Liste?",
+    "rankedLabel": "Ranked-Liste",
+    "rankedDescription": "Items werden nummeriert dargestellt",
+    "publicLabel": "Öffentlich sichtbar",
+    "publicDescription": "Andere User können diese Liste im Feed sehen",
+    "submit": "Liste erstellen & Items hinzufügen",
+    "submitPending": "Wird erstellt..."
+  },
+  "ItemEditor": {
+    "titlePlaceholder": "Titel",
+    "notePlaceholder": "Notiz (optional)",
+    "addItem": "Item hinzufügen",
+    "save": "Liste speichern",
+    "savePending": "Wird gespeichert...",
+    "minOneItem": "Die Liste braucht mindestens ein Item mit Titel."
+  },
+  "ListDetail": {
+    "noCover": "Kein Cover",
+    "by": "von",
+    "edit": "Liste bearbeiten",
+    "noItems": "Diese Liste hat noch keine Items."
+  },
+  "DeleteList": {
+    "trigger": "Liste löschen",
+    "title": "Bist du sicher?",
+    "description": "Die Liste \"{listTitle}\" und alle enthaltenen Items werden endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "confirm": "Endgültig löschen",
+    "pending": "Wird gelöscht..."
+  },
+  "Profile": {
+    "joined": "Dabei seit {date}",
+    "ownLists": "Deine Listen",
+    "userLists": "Listen von @{username}",
+    "ownEmpty": "Du hast noch keine Liste erstellt.",
+    "otherEmpty": "Dieser User hat noch keine öffentliche Liste erstellt."
   }
 }

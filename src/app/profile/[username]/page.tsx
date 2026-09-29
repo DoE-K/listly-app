@@ -3,12 +3,14 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { ListCard } from '@/components/list-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getTranslations } from 'next-intl/server'
 
 export default async function ProfilePage({
   params,
 }: {
   params: Promise<{ username: string }>
 }) {
+  const t = await getTranslations('Profile')
   const { username } = await params
   const profile = await getProfileByUsername(username)
 
@@ -28,10 +30,10 @@ export default async function ProfilePage({
     ? await getMyLists(profile.id)
     : await getPublicListsByUser(profile.id)
 
-  const joinedDate = new Date(profile.created_at).toLocaleDateString('de-DE', {
-    month: 'long',
-    year: 'numeric',
-  })
+  const joinedDate = new Date(profile.created_at).toLocaleDateString(
+    'de-DE',
+    { month: 'long', year: 'numeric' }
+  )
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -48,21 +50,19 @@ export default async function ProfilePage({
           </h1>
           <p className="text-muted-foreground">@{profile.username}</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Dabei seit {joinedDate}
+            {t('joined', { date: joinedDate })}
           </p>
         </div>
       </div>
 
       <h2 className="mb-4 text-xl font-semibold">
-        {isOwnProfile ? 'Deine Listen' : `Listen von @${profile.username}`}
+        {isOwnProfile ? t('ownLists') : t('userLists', { username: profile.username })}
       </h2>
 
       {lists.length === 0 ? (
         <p className="text-muted-foreground">
-          {isOwnProfile
-            ? 'Du hast noch keine Liste erstellt.'
-            : 'Dieser User hat noch keine öffentliche Liste erstellt.'}
-        </p>
+        {isOwnProfile ? t('ownEmpty') : t('otherEmpty')}
+      </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {lists.map((list) => (

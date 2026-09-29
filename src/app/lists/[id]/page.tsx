@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { DeleteListButton } from '@/components/delete-list-button'
+import { getTranslations } from 'next-intl/server'
 
 export default async function ListDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
+  const t = await getTranslations('ListDetail')
   const { id } = await params
   const result = await getListWithItems(id)
 
@@ -42,7 +44,7 @@ export default async function ListDetailPage({
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-              Kein Cover
+              {t('noCover')}
             </div>
           )}
         </div>
@@ -65,7 +67,7 @@ export default async function ListDetailPage({
                 href={`/profile/${author.username}`}
                 className="mt-1 inline-block text-sm text-muted-foreground hover:underline"
               >
-                von @{author.username}
+                {t('by')} @{author.username}
               </Link>
             )}
             {list.description && (
@@ -77,10 +79,7 @@ export default async function ListDetailPage({
 
           {isOwner && (
             <div className="mt-4 flex gap-2">
-              <Button
-                variant="outline"
-                render={<Link href={`/lists/${list.id}/edit`}>Liste bearbeiten</Link>}
-                />
+              <Button variant="outline" render={<Link href={`/lists/${list.id}/edit`}>{t('edit')}</Link>} />
               <DeleteListButton listId={list.id} listTitle={list.title} />
             </div>
           )}
@@ -90,7 +89,7 @@ export default async function ListDetailPage({
       {/* Items */}
       <div className="flex flex-col gap-3">
         {items.length === 0 ? (
-          <p className="text-muted-foreground">Diese Liste hat noch keine Items.</p>
+          <p className="text-muted-foreground">{t('noItems')}</p>
         ) : (
           items.map((item, index) => (
             <div

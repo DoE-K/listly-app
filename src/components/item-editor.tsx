@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { saveListItems } from '@/app/lists/actions'
 import { SortableItem } from '@/components/sortable-item'
+import { useTranslations } from 'next-intl'
 
 type Item = {
   id: string
@@ -57,6 +58,8 @@ export function ItemEditor({ listId, userId, initialItems }: ItemEditorProps) {
       activationConstraint: { distance: 5 },
     })
   )
+
+  const t = useTranslations('ItemEditor')
 
   function addItem() {
     setItems([
@@ -136,11 +139,11 @@ export function ItemEditor({ listId, userId, initialItems }: ItemEditorProps) {
 
       <Button type="button" variant="outline" onClick={addItem}>
         <Plus className="mr-2 h-4 w-4" />
-        Item hinzufügen
+        {t('addItem')}
       </Button>
 
       <Button type="submit" className="mt-4" disabled={pending}>
-        {pending ? 'Wird gespeichert...' : 'Liste speichern'}
+        {pending ? t('savePending') : t('save')}
       </Button>
     </form>
   )

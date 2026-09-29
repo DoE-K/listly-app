@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { createList } from '@/app/lists/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +13,7 @@ import { ImageUpload } from '@/components/image-upload'
 export function NewListForm({ userId }: { userId: string }) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null)
   const [state, formAction, pending] = useActionState(createList, null)
+  const t = useTranslations('NewList')
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -22,7 +24,7 @@ export function NewListForm({ userId }: { userId: string }) {
       )}
 
       <div className="grid gap-2">
-        <Label>Cover-Bild</Label>
+        <Label>{t('cover')}</Label>
         <ImageUpload
           userId={userId}
           value={coverUrl}
@@ -33,19 +35,19 @@ export function NewListForm({ userId }: { userId: string }) {
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="title">Titel</Label>
-        <Input id="title" name="title" placeholder="Meine Top 10 Filme" />
+        <Label htmlFor="title">{t('title')}</Label>
+        <Input id="title" name="title" placeholder={t('titlePlaceholder')} />
         {state?.fieldErrors?.title && (
           <p className="text-sm text-destructive">{state.fieldErrors.title[0]}</p>
         )}
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="description">Beschreibung</Label>
+        <Label htmlFor="description">{t('description')}</Label>
         <Textarea
           id="description"
           name="description"
-          placeholder="Worum geht's in dieser Liste?"
+          placeholder={t('descriptionPlaceholder')}
           rows={3}
         />
         {state?.fieldErrors?.description && (
@@ -57,26 +59,22 @@ export function NewListForm({ userId }: { userId: string }) {
 
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div>
-          <Label htmlFor="is_ranked">Ranked-Liste</Label>
-          <p className="text-sm text-muted-foreground">
-            Items werden nummeriert dargestellt
-          </p>
+          <Label htmlFor="is_ranked">{t('rankedLabel')}</Label>
+          <p className="text-sm text-muted-foreground">{t('rankedDescription')}</p>
         </div>
         <Switch id="is_ranked" name="is_ranked" defaultChecked />
       </div>
 
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div>
-          <Label htmlFor="is_public">Öffentlich sichtbar</Label>
-          <p className="text-sm text-muted-foreground">
-            Andere User können diese Liste im Feed sehen
-          </p>
+          <Label htmlFor="is_public">{t('publicLabel')}</Label>
+          <p className="text-sm text-muted-foreground">{t('publicDescription')}</p>
         </div>
         <Switch id="is_public" name="is_public" defaultChecked />
       </div>
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? 'Wird erstellt...' : 'Liste erstellen & Items hinzufügen'}
+        {pending ? t('submitPending') : t('submit')}
       </Button>
     </form>
   )
