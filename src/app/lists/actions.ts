@@ -152,3 +152,65 @@ export async function deleteList(listId: string) {
   revalidatePath('/feed')
   redirect(profile ? `/profile/${profile.username}` : '/feed')
 }
+
+export async function updateListMetadata(
+  listId: string,
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  const raw = {
+    title: formData.get('title') as string,
+    description: (formData.get('description') as string) || undefined,
+  }
+
+  const parsed = listSchema.safeParse(raw)
+  if (!parsed.success) {
+    return { fieldErrors: parsed.error.flatten().fieldErrors }
+  }
+
+  // Ownership-Check (RLS greift zusätzlich als zweite Verteidigungslinie)
+  const { data: existing } = await supabase
+    .from('lists')
+    .select('user_id')
+    .eq('id', listId)
+    .single()
+
+  if (!existing || existing.user_id !== user.id) {
+    return { error: 'Du bist nicht berechtigt, diese Liste zu bearbeiten.' }
+  }
+
+  const isRanked = formData.get('is_ranked') === 'on'
+  const isPublic = formData.get('is_public') === 'on'
+  const coverUrl = formData.get('cover_url') as string
+
+  const { error } = await supabase
+    .from('lists')
+    .update({
+      title: parsed.data.title,
+      description: parsed.data.description || null,
+      is_ranked: isRanked,
+      is_public: isPublic,
+      cover_url: coverUrl || null,
+    })
+    .eq('id', listId)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath(`/lists/${listId}`)
+  revalidatePath(`/lists/${listId}/edit`)
+  revalidatePath('/feed')
+
+  return { success: true }
+}

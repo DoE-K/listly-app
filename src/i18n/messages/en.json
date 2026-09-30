@@ -81,5 +81,13 @@
     "userLists": "Lists by @{username}",
     "ownEmpty": "You haven't created any list yet.",
     "otherEmpty": "This user hasn't created any public list yet."
-  }
+  },
+  "EditList": {
+    "pageTitle": "Edit list",
+    "detailsHeading": "Details",
+    "itemsHeading": "Items",
+    "saveDetails": "Save details",
+    "savingDetails": "Saving...",
+    "saved": "Saved."
+    }
 }
