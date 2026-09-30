@@ -57,65 +57,6 @@ export async function createList(
   redirect(`/lists/${data.id}/edit`)
 }
 
-export async function saveListItems(
-  listId: string,
-  _prevState: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  const t = await getTranslations('ItemEditor')
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login')
-  }
-
-  const itemsRaw = formData.get('items') as string
-  const items = JSON.parse(itemsRaw) as {
-    title: string
-    note: string
-    image_url: string
-  }[]
-
-  const validTitledItems = items.filter((item) => item.title.trim() !== '')
-
-  if (validTitledItems.length === 0) {
-    return { error: t('minOneItem') }
-  }
-
-  const { error: deleteError } = await supabase
-    .from('list_items')
-    .delete()
-    .eq('list_id', listId)
-
-  if (deleteError) {
-    return { error: deleteError.message }
-  }
-
-  const validItems = validTitledItems.map((item, index) => ({
-    list_id: listId,
-    title: item.title,
-    note: item.note || null,
-    image_url: item.image_url || null,
-    position: index,
-  }))
-
-  const { error: insertError } = await supabase
-    .from('list_items')
-    .insert(validItems)
-
-  if (insertError) {
-    return { error: insertError.message }
-  }
-
-  revalidatePath(`/lists/${listId}`)
-  revalidatePath(`/lists/${listId}/edit`)
-  redirect(`/lists/${listId}`)
-}
-
 export async function deleteList(listId: string) {
   const supabase = await createClient()
 
@@ -153,11 +94,12 @@ export async function deleteList(listId: string) {
   redirect(profile ? `/profile/${profile.username}` : '/feed')
 }
 
-export async function updateListMetadata(
+export async function saveList(
   listId: string,
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const t = await getTranslations('ItemEditor')
   const supabase = await createClient()
 
   const {
@@ -178,7 +120,6 @@ export async function updateListMetadata(
     return { fieldErrors: parsed.error.flatten().fieldErrors }
   }
 
-  // Ownership-Check (RLS greift zusätzlich als zweite Verteidigungslinie)
   const { data: existing } = await supabase
     .from('lists')
     .select('user_id')
@@ -189,11 +130,24 @@ export async function updateListMetadata(
     return { error: 'Du bist nicht berechtigt, diese Liste zu bearbeiten.' }
   }
 
+  const itemsRaw = formData.get('items') as string
+  const items = JSON.parse(itemsRaw) as {
+    title: string
+    note: string
+    image_url: string
+  }[]
+  const validTitledItems = items.filter((item) => item.title.trim() !== '')
+
+  if (validTitledItems.length === 0) {
+    return { error: t('minOneItem') }
+  }
+
   const isRanked = formData.get('is_ranked') === 'on'
   const isPublic = formData.get('is_public') === 'on'
   const coverUrl = formData.get('cover_url') as string
 
-  const { error } = await supabase
+  // 1. Metadaten aktualisieren
+  const { error: updateError } = await supabase
     .from('lists')
     .update({
       title: parsed.data.title,
@@ -204,13 +158,38 @@ export async function updateListMetadata(
     })
     .eq('id', listId)
 
-  if (error) {
-    return { error: error.message }
+  if (updateError) {
+    return { error: updateError.message }
+  }
+
+  // 2. Items ersetzen (alt löschen, neu einfügen)
+  const { error: deleteError } = await supabase
+    .from('list_items')
+    .delete()
+    .eq('list_id', listId)
+
+  if (deleteError) {
+    return { error: deleteError.message }
+  }
+
+  const validItems = validTitledItems.map((item, index) => ({
+    list_id: listId,
+    title: item.title,
+    note: item.note || null,
+    image_url: item.image_url || null,
+    position: index,
+  }))
+
+  const { error: insertError } = await supabase
+    .from('list_items')
+    .insert(validItems)
+
+  if (insertError) {
+    return { error: insertError.message }
   }
 
   revalidatePath(`/lists/${listId}`)
   revalidatePath(`/lists/${listId}/edit`)
   revalidatePath('/feed')
-
-  return { success: true }
+  redirect(`/lists/${listId}`)
 }
