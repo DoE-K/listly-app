@@ -39,11 +39,6 @@ export async function ListCard({ list, showAuthor }: ListCardProps) {
         </div>
         <CardContent className="p-4">
           <h3 className="truncate font-semibold">{list.title}</h3>
-          {list.description && (
-            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-              {list.description}
-            </p>
-          )}
         </CardContent>
         <CardFooter className="flex items-center justify-between px-4 pb-4">
           <div className="flex items-center gap-1">
